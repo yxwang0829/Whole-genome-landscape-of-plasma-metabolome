@@ -1,0 +1,77 @@
+# Official documentation: https://yanglab.westlake.edu.cn/software/gcta/#GREMLinWGSorimputeddata
+
+# Step 1: Segment based LD score
+#!/bin/bash
+cd /path/to/your/project/directory
+chr=\$1
+./software/gcta \
+    --bfile ../public/WGS_data/Q0_unre_Caucasian_c${chr} \
+    --keep ./Metabolome_WGS/hereg/data/hereg_sample.id \
+    --ld-score-region 200 \
+    --ld-wind 1000 \
+    --out ./Metabolome_WGS/hereg/data/step1/hereg_step1_chr${chr}
+
+# Step 2: Stratify the SNPs by LD scores of individual SNPs in R
+# Merge all outputs from step 1
+cd /path/to/your/project/directory/Metabolome_WGS/hereg/data/step1
+cat hereg_step1_chr*.score.ld > ../full_score_with_ultra_rare.ld.temp
+awk '!x[\$0]++' ../full_score_with_ultra_rare.ld.temp > ../step2_metwgs/full_score_with_ultra_rare.ld
+rm ../full_score_with_ultra_rare.ld.temp
+# Split the LD file into common (MAF ≥ 0.01) and rare (MAF < 0.01) bins
+rm(list = ls())
+suppressMessages(library(data.table))
+suppressMessages(library(dplyr))
+setwd("/path/to/your/project/directory/Metabolome_WGS/hereg/data/step2_metwgs")
+lds_seg <- as.data.frame(fread("full_score_with_ultra_rare.ld", select = c(1,8,4), header = T)) %>%
+  mutate(freq = as.numeric(freq), ldscore_SNP = as.numeric(ldscore_SNP))
+maf_common <- filter(lds_seg, freq>=0.01)
+maf_rare <- filter(lds_seg, freq<0.01, freq>=0.0001)
+# Stratify each MAF bin into 2 layers by LD, resulting in 6 bins
+quartiles_common <- summary(maf_common$ldscore_SNP)
+quartiles_rare <- summary(maf_rare$ldscore_SNP)
+lb1_snp <- maf_common[maf_common$ldscore_SNP <= quartiles_common[3], "SNP", drop = F]
+lb2_snp <- maf_common[maf_common$ldscore_SNP > quartiles_common[3], "SNP", drop = F]
+lb3_snp <- maf_rare[maf_rare$ldscore_SNP <= quartiles_rare[3], "SNP", drop = F]
+lb4_snp <- maf_rare[maf_rare$ldscore_SNP > quartiles_rare[3], "SNP", drop = F]
+fwrite(lb1_snp, "maf_ld1_snplist.txt", row.names = F, quote = F, col.names = F)
+fwrite(lb2_snp, "maf_ld2_snplist.txt", row.names = F, quote = F, col.names = F)
+fwrite(lb3_snp, "maf_ld3_snplist.txt", row.names = F, quote = F, col.names = F)
+fwrite(lb4_snp, "maf_ld4_snplist.txt", row.names = F, quote = F, col.names = F)
+
+
+# Step 3: Making GRMs using SNPs stratified into different groups
+for i in {1..22}; do
+    echo "/path/to/your/project/directory/public/WGS_data/Q0_unre_Caucasian_c$i" >> /path/to/your/project/directory/Metabolome_WGS/hereg/data/plink_file_full.list
+done
+
+cd /path/to/your/project/directory
+./software/gcta \
+      --mbfile ./Metabolome_WGS/hereg/data/plink_file_full.list \
+      --keep ./Metabolome_WGS/hereg/data/hereg_sample.id \
+      --make-grm-alg 1 \
+      --make-grm-part ${n} ${j} \
+      --threads 64 \
+      --extract ./Metabolome_WGS/hereg/data/step2_metwgs/maf_ld${i}_snplist.txt \
+      --out ./Metabolome_WGS/hereg/data/step3_metwgs/maf_ld${i}
+
+# Step 4
+> /path/to/your/project/directory/Metabolome_WGS/hereg/data/metwgs_step3_filelist.txt
+for i in {1..6}; do
+    echo "/path/to/your/project/directory/Metabolome_WGS/hereg/data/step3_metwgs/maf_ld${i}" >> /path/to/your/project/directory/Metabolome_WGS/hereg/data/metwgs_step3_filelist.txt
+done
+#!/bin/bash
+cd /path/to/your/project/directory
+a=parameter1
+b=parameter2
+for i in $(seq $a $b); do
+  ./software/gcta \
+    --HEreg \
+    --mgrm ./Metabolome_WGS/hereg/data/metwgs_step3_filelist.txt \
+    --keep ./Metabolome_WGS/hereg/data/hereg_sample.id \
+    --pheno ./Metabolome_WGS/data/Caucasian_regenie_phenofile.txt \
+    --mpheno ${i} \
+    --covar ./Metabolome_WGS/hereg/data/hereg_bcorvar.txt \
+    --qcovar ./Metabolome_WGS/hereg/data/hereg_qcorvar.txt \
+    --out ./Metabolome_WGS/hereg/result/h2/pheno${i} \
+    --thread-num 64
+done

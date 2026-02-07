@@ -1,0 +1,24 @@
+regenie \
+  --step 2 \
+  --chr ${chr} \
+  --keep /path/to/your/data/sample_ids.txt \
+  --bed /path/to/your/data/bed_file_chr${chr} \
+   # for derived subset masks only: --extract /path/to/your/data/Subset/chr${chr}_${subset}.txt \
+  --phenoFile /path/to/your/data/phenofile.txt \
+  --covarFile /path/to/your/data/covariatefile.txt \
+  --catCovarList Sex,Ethnicity,Month,Center,Provider,Batch \
+  --maxCatLevels 26 \
+  --pred /path/to/your/data/${set}_step1/${set}_step1_pred.list \
+  --apply-rint \
+  --force-qt \
+  --vc-tests skato,acato \
+  --rgc-gene-p \
+  --anno-file /path/to/your/data/Anno/chr${chr}/Main/OLD${mask}_chr${chr}.txt \
+  --set-list /path/to/your/data/Anno/chr${chr}/Main/chr${chr}_${mask}.setlist \
+  --mask-def /path/to/your/data/Anno/Mask/Mask_${mask}.txt \
+  --aaf-bins 0.01,0.001,0.0001 \
+  --joint minp,acat,sbat \
+  --bsize 200 \
+  --threads 150 \
+  --minMAC 1 \
+  --out /path/to/your/output/${set}_chr${chr}_${mask}_gene_based_step2_output

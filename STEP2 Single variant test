@@ -1,0 +1,13 @@
+regenie \
+  --step 2 \
+  --keep /path/to/your/data/${set}_sample_ids.txt \
+  --bed /path/to/your/data/bed_file_chr${chr} \
+  --phenoFile /path/to/your/data/phenofile.txt \
+  --covarFile /path/to/your/data/covariatefile.txt \
+  --catCovarList Sex,Ethnicity,Month,Center,Provider,Batch \
+  --maxCatLevels 26 \
+  --pred /path/to/your/data/${set}_step1/${set}_step1_pred.list \
+  --apply-rint \
+  --force-qt \
+  --bsize 1000 \
+  --out /path/to/your/output/${set}_chr${chr}_single_variant_step2_output
