@@ -1,6 +1,6 @@
-# Whole genome sequencing and plasma metabolomics unveil genetic determinants and clinical implications for human health
+# Analysis of whole genome sequencing and plasma metabolomics unveil genetic determinants and clinical implications for human health
 ## Description
-This repository contains Linux/R code for the analysis implemented in the genetic atlas of the human plasma metabolome, as described in the paper 'Whole genome sequencing and plasma metabolomics unveil genetic determinants and clinical implications for human health'.
+This repository contains Linux/R code for the analysis implemented in the genetic atlas of the human plasma metabolome, as described in the paper 'Analysis of whole genome sequencing and plasma metabolomics unveil genetic determinants and clinical implications for human health'.
 
 Metabolome-genomic results and summary statistics generated in this study are publicly available through our interactive portal (https://metabolome-whole-genome-landscape.com/).
 
@@ -8,6 +8,6 @@ Metabolome-genomic results and summary statistics generated in this study are pu
 ## License
 This work is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa]. [![CC BY-NC-SA 4.0][cc-by-nc-sa-image]][cc-by-nc-sa]
 ## Citation
-> Wang, Y. X. et al. Whole genome sequencing and plasma metabolomics unveil genetic determinants and clinical implications for human health. _Nat Commun_.
+> [Wang, Y. X. et al. Analysis of whole genome sequencing and plasma metabolomics unveil genetic determinants and clinical implications for human health. _Nat. Commun._ (2026).](https://doi.org/10.1038/s41467-026-74781-8)
 
 Paper information will be available upon publication.
