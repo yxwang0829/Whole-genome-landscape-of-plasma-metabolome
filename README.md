@@ -11,4 +11,4 @@ Metabolome-genomic results and summary statistics generated in this study are pu
 This work is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa]. [![CC BY-NC-SA 4.0][cc-by-nc-sa-image]][cc-by-nc-sa]
 
 ## Citation
-> [Wang, Y. X. et al. Analysis of whole genome sequencing and plasma metabolomics unveil genetic determinants and clinical implications for human health. _Nat. Commun._ (2026).](https://doi.org/10.1038/s41467-026-74781-8)
+> [Wang, Y. X. et al. Analysis of whole genome sequencing and plasma metabolomics unveil genetic determinants and clinical implications for human health. _Nat Commun_. 2026;17(1):7856.](https://doi.org/10.1038/s41467-026-74781-8)
